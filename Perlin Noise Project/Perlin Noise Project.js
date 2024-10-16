@@ -1,46 +1,28 @@
 // Perlin Noise Project (Terrain Generation)
 
-
-
-
-
-
-
-
-
-
-let NUM_CIRCLES = 40; 
-let seed 
+let rectWidth = 1;
+let rTime = 0.5;
+let rInterval = 0.01;
+let noiseOffset = 0;
 
 function setup() {
-    createCanvas(windowWidth, windowheight);
-    seed = random(100);
+  createCanvas(windowWidth, WindowHeight);
+  background(255);
+  frameRate(30)
+}
+
+function generateTerrain() {
+  rTime = 5 + frameCount / 20;
+  let tHeight = 0;
+  let count = 0;
+  let peakY = 0;
+  let peakX = 0;
+  let peakY1 = 0;
+
+  for (let x = 0; x <= windowWidth; x += rectWidth) {
+    let rectHeight = noise(rTime);
+    rectHeight = map(rectHeight, 0, 1, 0, 500);
+    rTime += rInterval;
   }
-  
-  function draw() {
-    randomSeed(seed);
-    background(220);
-    drawCircles();
-  }
+}
 
-  function drawCircles(){
-    noFill();
-
-    let smallDiameter = Infinity;
-    let smallX = -1;
-    let smallY = -1;
-    for(let i = 0; i < NUM_CIRCLES; i++){
-        let x = random(0, width)
-        let y = random(0,height)
-        let d = random(20, 60);
-        if(d < smallDiameter){
-            smallDiameter = d;
-        }
-
-        Circles(x, y, d);
-    }
-    fill(255, 200, 100);
-    text(smallDiameter, width/2, height/2);
-    circle(smallX, smallY, smallDiameter);
-
-  }
