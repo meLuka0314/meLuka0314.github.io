@@ -31,34 +31,50 @@ function draw() {
   background(220);  
   determineActiveSquare();   //figure out which tile the mouse cursor is over
   drawGrid();                //render the current game board to the screen (and the overlay)
-  drawOverlay();
+  drawOverlay(); //draws the overlay pattern 
+  winCondition();
 }
 
 
 
 function flipCrossPattern(){
   // cross-shaped pattern flips on a mouseclick. Boundary conditions are checked within the flip function to ensure in-bounds access for array
-  flip(currentCol, currentRow);
-  flip(currentCol-1, currentRow);
-  flip(currentCol+1, currentRow);
-  flip(currentCol, currentRow-1);
-  flip(currentCol, currentRow+1);
+  //cross pattern
+  flip(currentCol, currentRow); //center
+  flip(currentCol-1, currentRow); //left
+  flip(currentCol+1, currentRow); //right
+  flip(currentCol, currentRow-1); //up
+  flip(currentCol, currentRow+1); //down
 }
 
 function flipSquarePattern() {
-  for (let i = -1; i <= 1; i++) {
-    for (let j = -1; j <= 1; j++) {
-      flip(currentCol + j, currentRow + i);
-    }
-  }
+  flip(currentCol, currentRow); //center
+  flip(currentCol-1, currentRow); //left
+  flip(currentCol-1, currentRow-1); //left top
+  flip(currentCol-1, currentRow+1); //left bottom
+  flip(currentCol+1, currentRow); //right
+  flip(currentCol+1, currentRow-1); //right top
+  flip(currentCol+1, currentRow+1);//roght bottom
+  flip(currentCol, currentRow-1); //top
+  flip(currentCol, currentRow+1); //bottom
 }
 
-function mousePressed() {
-  if (keyIsDown(SHIFT)){ //when shift key is pressed
-    flip(currentCol, currentRow);
+
+function mousePressed() {  
+  if (keyIsDown(SHIFT)) { 
+    flipCrossPattern();
+    flip(currentCol, currentRow); //center
+  } 
+
+
+  if (flipPattern === 'cross') {
+    flipCrossPattern();
   } else {
-    flipPattern === 'cross' ? flipCrossPattern() : flipSquarePattern();
+    flipSquarePattern();
   }
+
+
+
 }
 
 function randomizeStartingArrangement() {
@@ -67,6 +83,7 @@ function randomizeStartingArrangement() {
     let newRow = [];
     for (let j = 0; j < NUM_COLS; j++) {
       newRow.push(random([0, 255]));
+      if g
     }
     gridData.push(newRow);
   }
@@ -88,16 +105,20 @@ function drawOverlay() {
     highlightSquare(currentCol+1, currentRow);
     highlightSquare(currentCol, currentRow-1);
     highlightSquare(currentCol, currentRow+1);
-  } else {
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++){
-        highlightSquare(currentCol + j, currentRow + i);
-      }
-    }
+  } 
+  
+  if (overlayPattern === 'square') {
+    highlightSquare(currentCol, currentRow); //center
+    highlightSquare(currentCol-1, currentRow); //left
+    highlightSquare(currentCol-1, currentRow-1); //left top
+    highlightSquare(currentCol-1, currentRow+1); //left bottom
+    highlightSquare(currentCol+1, currentRow); //right
+    highlightSquare(currentCol+1, currentRow-1); //right top
+    highlightSquare(currentCol+1, currentRow+1);//roght bottom
+    highlightSquare(currentCol, currentRow-1); //top
+    highlightSquare(currentCol, currentRow+1); //bottom
   }
 }
-
-
 function flip(col, row){
   // given a column and row for the 2D array, flip its value from 0 to 255 or 255 to 0
   // conditions ensure that the col and row given are valid and exist for the array. If not, no operations take place.
@@ -127,10 +148,16 @@ function drawGrid(){
 
 function keyPressed() {
   if (key === ' ') {
-    if (keyIsDown(SHIFT)) {
-      overlayPattern = (overlayPattern === 'cross') ? 'square' : 'cross';
+    if (overlayPattern === 'cross') {
+      overlayPattern = 'square'; 
     } else {
-      flipPattern = (flipPattern === 'cross') ? 'square' : 'cross';
+      overlayPattern = 'cross';
+    }
+
+    if (flipPattern === 'cross') {
+      flipPattern = 'square';
+    } else {
+      flipPattern = 'cross';
     }
   }
   if (key === 'R') {
@@ -138,4 +165,17 @@ function keyPressed() {
   }
 }
 
+function winCondition() {
+  let score = 0;
 
+
+
+  if (score === 20) {
+    fill(0, 255, 0);
+    text("you won", width/2, height/2);
+  }
+  if (score === -20) {
+    fill(0, 255, 0);
+    text("you won", width/2, height/2);
+  }
+}
