@@ -1,10 +1,10 @@
 let scale = 15;
-
+let leafDepth = 5;
 
 function setup() {
   createCanvas(windowWidth/2, windowHeight/2);
   background(255);
-  
+  keyPressed();
 }
 
 function draw() {
@@ -13,13 +13,12 @@ function draw() {
   randomSeed(20);
   let branchAngle = map(mouseX, 0, width, 10, 45);
   //draws the tree starting at the bottom center
-
   drawTree(width/2, height*0.9, 90, branchAngle, 7);
 }
 
-function drawLine(x1,  y1,  x2,  y2,  depth) {
+function drawLine(x1,  y1,  x2,  y2, something) {
   //draw a line segment connecting (x1,y1) to (x2,y2)
-  stroke(0); //set the stroke color to black
+  strokeWeight(something); //set the stroke color to black
   line(x1, y1, x2, y2); //draw the line from (x1, y1) tp (x2, y2)
 }
 
@@ -28,9 +27,9 @@ function drawTree(x1, y1, angle, branchAngle, depth) { //draws tree
     let x2 = x1 + (cos(radians(angle))*depth*scale);     //calculate endpoints of current branch
     let y2 = y1 - (sin(radians(angle))*depth*scale);     //using trig ratios. Get shorter based on depth
     //draws the current branch
-    drawLine(x1, y1, x2, y2, depth);
+    drawLine(x1, y1, x2, y2, depth + 10);
     //if the depth is shallow enough, add a leaf at the branch's end
-    if (depth < 5) {
+    if (depth < leafDepth) {
       drawLeaf(x2, y2, depth);
     }
 
@@ -51,5 +50,11 @@ function drawLeaf(x, y, depth) {
 }
 
 function keyPressed() {
-
+  if (key === 'z') {
+    leafDepth = max(0, leafDepth - 1);
+  }
+  if (key === 'x') {
+    leafDepth = min(7, leafDepth + 1);
+  }
 }
+
